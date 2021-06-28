@@ -13,11 +13,26 @@ def rule_init():
 
 
 def counter():
-    chain = iptc.Chain(iptc.Table(iptc.Table.FILTER), "INPUT")
+    table=iptc.Table(iptc.Table.FILTER)
+    chain = iptc.Chain(table, "INPUT")
+    table.refresh()
+    packets_list = []
     for rule in chain.rules:
         (packets, bytes) = rule.get_counters()
+        packets_list.append((packets, bytes))
         print(packets, bytes)
+    return packets_list
+
+def stop():
+    table=iptc.Table(iptc.Table.FILTER)
+    table.autocommit=False
+    chain = iptc.Chain(table, "INPUT")
+    for rule in chain.rules:
+        chain.delete_rule(rule)
+    table.commit()
+    table.autocommit=True
+
 
 
 if __name__ == '__main__':
-    counter()
+    print(counter())
