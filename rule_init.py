@@ -8,12 +8,12 @@ def rule_init():
     match = rule.create_match("tcp")
     match.dport = "5000"
     rule.add_match(match)
-    chain = iptc.Chain(iptc.Table(iptc.Table.FILTER), "INPUT")
+    chain = iptc.Chain(iptc.Table(iptc.Table.MANGLE), "INPUT")
     chain.insert_rule(rule)
 
 
 def counter():
-    table=iptc.Table(iptc.Table.FILTER)
+    table = iptc.Table(iptc.Table.MANGLE)
     chain = iptc.Chain(table, "INPUT")
     table.refresh()
     packets_list = []
@@ -23,15 +23,15 @@ def counter():
         print(packets, bytes)
     return packets_list
 
+
 def stop():
-    table=iptc.Table(iptc.Table.FILTER)
-    table.autocommit=False
+    table = iptc.Table(iptc.Table.MANGLE)
+    table.autocommit = False
     chain = iptc.Chain(table, "INPUT")
     for rule in chain.rules:
         chain.delete_rule(rule)
     table.commit()
-    table.autocommit=True
-
+    table.autocommit = True
 
 
 if __name__ == '__main__':
