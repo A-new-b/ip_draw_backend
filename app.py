@@ -33,7 +33,7 @@ def api_count():
     num = now_num
     byte = now_bytes
     return json.dumps(
-        {"second_num": second_num, "second_byte": second_byte, "now_num": now_num, "now_bytes": now_bytes})
+        {"second_num": second_num, "second_bytes": second_byte, "now_num": now_num, "now_bytes": now_bytes})
 
 
 @app.route('/api/stop')
@@ -43,4 +43,4 @@ def api_stop():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=False)
+    app.run(host="localhost", debug=True,port=5001)
