@@ -1,24 +1,23 @@
-from flask import Flask
+from flask import Flask, render_template
 from rule_init import rule_init, counter, stop
 import json
 
-app = Flask(__name__)
+app = Flask(__name__,
+            template_folder="./templates/dist",
+            static_folder="./templates/dist/static"
+            )
 
 num = 0
 byte = 0
-
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
 
 
 @app.route('/api/init')
 def api_init():
     rule_init()
     global num
-    num =0
+    num = 0
     global byte
-    byte =0
+    byte = 0
     return json.dumps({"result": "OK"})
 
 
@@ -40,6 +39,12 @@ def api_count():
 def api_stop():
     stop()
     return json.dumps({"result": "OK"})
+
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    return render_template("./index.html")
 
 
 if __name__ == '__main__':
